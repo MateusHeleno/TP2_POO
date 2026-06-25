@@ -10,6 +10,7 @@ public class Medicao {
     private double temperatura;
     private double consumoKwh;
     private double consumoPrevisto; // consumo previsto = b0 + b1 * temperatura
+    private double residuoPercentual;
 
     public Medicao(LocalDateTime timestamp, String cidade, double latitude, double longitude, double temperatura, double consumoKwh) {
         setTimestamp(timestamp);
@@ -59,6 +60,14 @@ public class Medicao {
             this.consumoKwh = consumoKwh;
     }
 
+    public void setConsumoPrevisto(double consumoPrevisto) {
+        this.consumoPrevisto = consumoPrevisto;
+    }
+
+    public void setResiduoPercentual(double residuoPercentual) {
+        this.residuoPercentual = residuoPercentual;
+    }
+
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
@@ -79,5 +88,13 @@ public class Medicao {
 
     public double getConsumoKwh() {
         return consumoKwh;
+    }
+
+    public double getConsumoPrevisto() {
+        return consumoPrevisto;
+    }
+
+    public double getResiduoPercentual() {
+        return residuoPercentual;
     }
 }

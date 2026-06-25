@@ -1,7 +1,6 @@
 package model;
 
 import java.util.*;
-import java.math.*;
 
 /*
     y = b0 + b1(x)
@@ -13,8 +12,6 @@ import java.math.*;
     b0 e b1 são calculados pelo método dos mínimos quadrados
 */
 public class RegressaoLinear {
-    private double y; // Consumo Kwh
-    private double x; // Temperatura Externa
     private double beta0;
     private double beta1;
     private int n;
@@ -24,8 +21,26 @@ public class RegressaoLinear {
     public RegressaoLinear() {
         this.beta0 = 0.0;
         this.beta1 = 0.0;
+        this.r2 = 0.0;
         this.n = 0;
     }
+
+    // Essa função seria semelhante ao .fit() presente na biblioteca sklearn do Python, onde o modelo calcula as variáveis internas minimizando os erros
+    public boolean treinar(List<Medicao> medicoes) {
+        this.medicoes = medicoes;
+        this.n = medicoes.size();
+
+        if (n < 2)
+            return false;
+
+        calcularCoeficientes();
+        calcularR2();
+        calcularResiduoPercentual();
+
+        return true;
+    }
+
+    // Todas as funções abaixo são private pois servem como funções auxiliares à função pública. Elas são privadas pois não devem ser chamadas fora do escopo da classe
 
     /*
         Função que calcula o valor de beta0 e beta1
@@ -39,9 +54,8 @@ public class RegressaoLinear {
         for (Medicao dado : medicoes) {
             somaX += dado.getTemperatura();
             somaY += dado.getConsumoKwh();
-            somaXY += somaX * somaY;
-            somaX2 += Math.pow(somaX, 2);
-            n++;
+            somaXY += dado.getTemperatura() * dado.getConsumoKwh();
+            somaX2 += Math.pow(dado.getTemperatura(), 2);
         }
 
         double numerador = (n * somaXY) - (somaY * somaX);
@@ -49,7 +63,7 @@ public class RegressaoLinear {
 
         if (denominador != 0) {
             beta1 = numerador / denominador;
-            beta0 = (somaY - (beta1 * somaY)) / n;
+            beta0 = (somaY - (beta1 * somaX)) / n;
         }
     }
 
@@ -61,9 +75,33 @@ public class RegressaoLinear {
 
         double somaResiduos = 0;
         double somaTotal = 0;
+
+        for (Medicao dado : medicoes) {
+            double consumoPrevisto = preverConsumo(dado.getTemperatura());
+            somaResiduos += Math.pow(dado.getConsumoKwh() - consumoPrevisto, 2);
+            somaTotal += Math.pow(dado.getConsumoKwh() - mediaY, 2);
+        }
+
+        if (somaTotal != 0) {
+            r2 = 1 - (somaResiduos / somaTotal);
+        }
+        else
+            r2 = 0;
     }
 
-    public double calcularConsumoPrevisto(double temperatura) {
+    private void calcularResiduoPercentual() {
+        for (Medicao dado : medicoes) {
+            double consumoPrevisto = preverConsumo(dado.getTemperatura());
+            if (consumoPrevisto != 0) {
+                double resPercentual = ((dado.getConsumoKwh() - consumoPrevisto) / consumoPrevisto) * 100;
+                dado.setResiduoPercentual(resPercentual);
+            }
+            else
+                dado.setResiduoPercentual(0);
+        }
+    }
+
+    public double preverConsumo(double temperatura) {
         return beta0 + beta1 * temperatura;
     }
 
@@ -79,5 +117,9 @@ public class RegressaoLinear {
 
     public double getR2() {
         return r2;
+    }
+
+    public int getN() {
+        return  n;
     }
 }
