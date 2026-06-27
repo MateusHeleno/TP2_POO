@@ -30,34 +30,24 @@ public class Medicao {
         this.cidade = cidade;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp; 
+    }
 
     public void setLatitude(double latitude) {
-        if (latitude < -90 || latitude > 90)
-            throw new IllegalArgumentException("Latitude tem que estar entre -90 e 90");
-        else
-            this.latitude = latitude;
+        this.latitude = latitude;
     }
 
     public void setLongitude(double longitude) {
-        if (longitude < -180 || longitude > 180)
-            throw new IllegalArgumentException("Longitude tem que estar entre -180 e 180");
-        else
-            this.longitude = longitude;
+        this.longitude = longitude;
     }
 
     public void setTemperatura(double temperatura) {
-        if (temperatura < -50 || temperatura > 60)
-            throw new IllegalArgumentException("Temperatura tem que estar entre -50 e 60");
-        else
-            this.temperatura = temperatura;
+        this.temperatura = temperatura;
     }
 
     public void setConsumoKwh(double consumoKwh) {
-        if (consumoKwh < 0)
-            throw new IllegalArgumentException("Consumo não pode ser negativo");
-        else
-            this.consumoKwh = consumoKwh;
+        this.consumoKwh = consumoKwh;
     }
 
     public void setConsumoPrevisto(double consumoPrevisto) {
@@ -72,7 +62,9 @@ public class Medicao {
         return timestamp;
     }
 
-    public String getCidade() {return cidade; }
+    public String getCidade() {
+        return cidade; 
+    }
 
     public double getLatitude() {
         return latitude;
@@ -96,5 +88,11 @@ public class Medicao {
 
     public double getResiduoPercentual() {
         return residuoPercentual;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s | %s | %.4f | %.4f | %.2f°C | %.2fkWh",
+                timestamp, cidade, latitude, longitude, temperatura, consumoKwh);
     }
 }
