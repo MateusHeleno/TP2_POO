@@ -78,6 +78,7 @@ public class RegressaoLinear {
 
         for (Medicao dado : medicoes) {
             double consumoPrevisto = preverConsumo(dado.getTemperatura());
+            dado.setConsumoPrevisto(consumoPrevisto);
             somaResiduos += Math.pow(dado.getConsumoKwh() - consumoPrevisto, 2);
             somaTotal += Math.pow(dado.getConsumoKwh() - mediaY, 2);
         }

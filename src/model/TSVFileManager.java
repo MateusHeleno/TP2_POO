@@ -1,20 +1,13 @@
 package model;
 
-import model.ErroValidacao;
 import java.io.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import DAO.MedicaoDAO;
 
 public class TSVFileManager {
     private final File file;
 
-    public TSVFileManager(String filepath) {
-        if (!filepath.endsWith(".tsv"))
-            filepath += ".tsv";
-
-        this.file = new File(filepath);
+    public TSVFileManager(File filepath) {
+        this.file = filepath;
     }
 
     public void escreverTSV(List<Medicao> medicoes) throws IOException {

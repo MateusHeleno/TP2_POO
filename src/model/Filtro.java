@@ -60,12 +60,12 @@ public class Filtro {
     }
 
     public List<Medicao> aplicarFiltroRaio(List<Medicao> medicoes) {
-        if (latitudeCentro == null || longitudeCentro == null)
-            return medicoes; 
+        if (latitudeCentro == null || longitudeCentro == null || raioKm == null)
+            return medicoes;
 
         return medicoes.stream()
             .filter(n -> {
-                Double raio = CalculoDistancia.calcular(
+                double raio = CalculoDistancia.calcular(
                     latitudeCentro, longitudeCentro, n.getLatitude(), n.getLongitude()
                 );
                 return raio <= raioKm;

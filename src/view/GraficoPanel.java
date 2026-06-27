@@ -38,9 +38,7 @@ public class GraficoPanel extends JPanel {
         atualizarDados(dados, regressao, this.limiteOutlier);
     }
 
-    public void atualizarDados(List<Medicao> dados,
-                               RegressaoLinear regressao,
-                               double limiteOutlier) {
+    public void atualizarDados(List<Medicao> dados,  RegressaoLinear regressao, double limiteOutlier) {
         this.dados = dados != null ? new ArrayList<>(dados) : new ArrayList<>();
         this.regressao = regressao;
         this.limiteOutlier = limiteOutlier;

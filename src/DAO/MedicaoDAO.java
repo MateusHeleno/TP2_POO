@@ -38,7 +38,6 @@ public class MedicaoDAO {
             boolean primeiraLinha = true;
             
             while ((linha = reader.readLine()) != null) {
-
                 if (primeiraLinha) {   
                     erros.registrarLinhaProcessada();
                     primeiraLinha = false;
@@ -64,7 +63,7 @@ public class MedicaoDAO {
         }
         
         try {
-            LocalDateTime timestamp = LocalDateTime.parse(campos[0].trim(), FORMATTER);
+            LocalDateTime timestamp = parseTimestamp(campos[0].trim());
             String cidade = campos[1].trim();
             double latitude = Double.parseDouble(campos[2].trim());
             double longitude = Double.parseDouble(campos[3].trim());
@@ -111,12 +110,12 @@ public class MedicaoDAO {
         return erros;
     }
 
-    public LocalDateTime parseTimestamp(String str) {
+    public static LocalDateTime parseTimestamp(String str) {
         try {
             return LocalDateTime.parse(str);
         } catch (Exception e) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.US);
-            return LocalDateTime.parse(str, formatter);
+            // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.US);
+            return LocalDateTime.parse(str, FORMATTER);
         }
     }
 

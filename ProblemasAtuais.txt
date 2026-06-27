@@ -2,12 +2,12 @@
 2 - Implementar a classe FormatarNumero nos códigos(opicional)
 3 - FiltrosPanel — filtros sem conexão com o controller
 4 - SistemaController — o Filtro nunca é populado
-5 - RegressaoLinear — consumoPrevisto nunca é gravado na Medicao
+5 - RegressaoLinear — consumoPrevisto nunca é gravado na Medicao -> corrigido
 6 - MedicaoDAO.parseLinha() — contagem de linhas errada
 7 - MedicaoDAO.carregarDeTSV() — não registra o número da linha atual no parseLinha
-8 - adicionarMedicao() — cria Medicao com todos os campos nulos/zero
-9 - TSVFileManager — classe inutilizada
+8 - adicionarMedicao() — cria Medicao com todos os campos nulos/zero -> corrigido
+9 - TSVFileManager — classe inutilizada -> corrigido
 10 - MainFrame.inicializarComponentes() — MedicoesPanel criado com null
-11 - MedicaoDAO — parseTimestamp() nunca é chamado
-12 - ErroValidacao.getMensagemResumo() — bug de concatenação
-13 - Filtro.aplicarFiltroRaio() — NPE potencial quando raioKm é null
+11 - MedicaoDAO — parseTimestamp() nunca é chamado -> corrigido
+12 - ErroValidacao.getMensagemResumo() — bug de concatenação -> corrigido
+13 - Filtro.aplicarFiltroRaio() — NPE potencial quando raioKm é null -> corrigido

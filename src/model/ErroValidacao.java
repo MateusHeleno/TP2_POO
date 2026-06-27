@@ -77,8 +77,6 @@ public class ErroValidacao {
         return getLinhasRejeitadas() > 0;
     }
 
-
-    
     public String getMensagemResumo() {
         StringBuilder sb = new StringBuilder();
 
@@ -87,7 +85,7 @@ public class ErroValidacao {
         sb.append("Linhas válidas: ").append(linhasValidas).append("\n");
         sb.append("Linhas rejeitadas: ").append(getLinhasRejeitadas()).append("\n\n");
 
-        if(temErros()){
+        if (temErros()){
             sb.append("Erros encontrados:\n");
             sb.append("- Coordenadas inválidas: ").append(errosCoordenada).append("\n");
             sb.append("- Temperaturas inválidas: ").append(errosTemperatura).append("\n");
@@ -97,15 +95,14 @@ public class ErroValidacao {
             sb.append("== Amostras dos Primeiros Erros ==\n");
 
             int tamanhoMensagem = mensagensErro.size(); // pra não percorrer mais de uma vez
-            int limiteExibicao = Math.min(tamanhoMensagem,5); // fica com o menor valor
-            for(int i = 0;i< limiteExibicao;i++){
+            int limiteExibicao = Math.min(tamanhoMensagem, 5); // fica com o menor valor
+            for (int i = 0; i< limiteExibicao; i++){
                 sb.append(mensagensErro.get(i)).append("\n");
             }
 
             if(tamanhoMensagem > 5)
-                sb.append("... e mais").append(tamanhoMensagem - 5).append("erro(s) omitido(s).\n");
+                sb.append("... e mais ").append(tamanhoMensagem - 5).append(" erro(s) omitido(s).\n");
         }
-
 
         return sb.toString();
     }

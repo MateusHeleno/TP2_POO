@@ -3,15 +3,17 @@ package controller;
 import DAO.MedicaoDAO;
 import model.*;
 import view.*;
+
+import java.awt.*;
 import java.io.PrintWriter;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SistemaController {
-
     private MainFrame view;
     private MedicaoDAO dao;
     private Filtro filtroAtual;
@@ -34,7 +36,7 @@ public class SistemaController {
         configurarEventos();
     }
 
-    //Define o que cada botão fará(chamando os métodos presentes em todo o sistema)
+    // Define o que cada botão fará (chamando os métodos presentes em todo o sistema)
     private void configurarEventos() {
         view.getItemCarregar().addActionListener(e -> {
             try {
@@ -71,9 +73,8 @@ public class SistemaController {
         chooser.setCurrentDirectory(pastaInicial);
         int opcao = chooser.showOpenDialog(view);
 
-        if (opcao != JFileChooser.APPROVE_OPTION) {
+        if (opcao != JFileChooser.APPROVE_OPTION)
             return;
-        }
 
         File arquivo = chooser.getSelectedFile();
 
@@ -139,12 +140,79 @@ public class SistemaController {
     }
 
     public void adicionarMedicao() {
-        Medicao nova = new Medicao();
+        // ao criar uma nova medição, não deveria pedir ao usuário os dados da medição? caso contrário os valores serão null
+        JTextField latitude = new JTextField(20);
+        JTextField longitude = new JTextField(20);
+        JTextField temperatura = new JTextField(10);
+        JTextField consumo = new JTextField(10);
+        JTextField cidade = new JTextField(25);
+        JTextField data = new JTextField(10);
 
-        tableModel.adicionarMedicao(nova);
-        dadosOriginais = tableModel.getDadosOriginais();
+        JPanel form = new JPanel(new GridLayout(0, 1, 5, 5));
+        form.add(new JLabel("Altitude: "));
+        form.add(latitude);
 
-        aplicarFiltros();
+        form.add(new JLabel("Longitude: "));
+        form.add(longitude);
+
+        form.add(new JLabel("Temperatura: "));
+        form.add(temperatura);
+
+        form.add(new JLabel("Cidade: "));
+        form.add(cidade);
+
+        form.add(new JLabel("Consumo: "));
+        form.add(consumo);
+
+        form.add(new JLabel("Data/Hora (yyyy-MM-dd HH:mm:ss): "));
+        form.add(data);
+
+        int opcao = JOptionPane.showConfirmDialog(
+                null,
+                form,
+                "Adicionar nova Medição",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE
+        );
+        if (opcao == JOptionPane.OK_OPTION) {
+            try {
+                Medicao nova = new Medicao();
+
+                nova.setCidade(cidade.getText());
+                nova.setLatitude(Double.parseDouble(latitude.getText().replace(',', '.')));
+                nova.setLongitude(Double.parseDouble(longitude.getText().replace(',', '.')));
+                nova.setTemperatura(Double.parseDouble(temperatura.getText().replace(',', '.')));
+                nova.setConsumoKwh(Double.parseDouble(consumo.getText().replace(',', '.')));
+                nova.setTimestamp(MedicaoDAO.parseTimestamp(data.getText()));
+
+                tableModel.adicionarMedicao(nova);
+                dadosOriginais = tableModel.getDadosOriginais();
+
+                aplicarFiltros();
+                JOptionPane.showMessageDialog(null, "Medição Adicionada com Sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Erro: Não digite letras nos campos numéricos",
+                        "Erro de Formato",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            } catch (DateTimeParseException e) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Erro: A data deve estar no formato yyyy-MM-dd HH:mm:ss",
+                        "Erro de Data",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Ocorreu um erro ao adicionar a medição: " + e.getMessage(),
+                        "Erro",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
     }
 
     public void removerMedicoesSelecionadas() {
@@ -185,34 +253,15 @@ public class SistemaController {
 
         int opcao = chooser.showSaveDialog(view);
 
-        if (opcao != JFileChooser.APPROVE_OPTION) {
+        if (opcao != JFileChooser.APPROVE_OPTION)
             return;
-        }
 
         File arquivo = chooser.getSelectedFile();
+        TSVFileManager tsvFileManager = new TSVFileManager(arquivo);
 
-        try (PrintWriter writer = new PrintWriter(arquivo)) {
-
-            writer.println(
-                "timestamp\tcidade\tlatitude\tlongitude\ttemperatura\tconsumoKwh\tconsumoPrevisto\tresiduoPercentual"
-            );
-
-            for (Medicao m : dadosFiltrados) {
-                writer.printf(
-                    "%s\t%s\t%.6f\t%.6f\t%.2f\t%.2f\t%.2f\t%.2f%n",
-                    m.getTimestamp(),
-                    m.getCidade(),
-                    m.getLatitude(),
-                    m.getLongitude(),
-                    m.getTemperatura(),
-                    m.getConsumoKwh(),
-                    m.getConsumoPrevisto(),
-                    m.getResiduoPercentual()
-                );
-            }
-
+        try  {
+            tsvFileManager.escreverTSV(dadosFiltrados);
             view.exibirMensagemInfo("Relatório exportado com sucesso.");
-
         } catch (Exception e) {
             view.exibirMensagemErro("Erro ao exportar relatório: " + e.getMessage());
         }
