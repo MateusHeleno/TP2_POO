@@ -1,0 +1,1 @@
+Outlier -> medida que ficou fora do padrão em relação à regressão
