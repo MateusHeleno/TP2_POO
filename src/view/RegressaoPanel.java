@@ -1,5 +1,6 @@
 package view;
 
+import util.FormatarNumero;
 import javax.swing.*;
 import java.awt.*;
 
@@ -99,12 +100,16 @@ public class RegressaoPanel extends JPanel {
         add(scrollErros, BorderLayout.CENTER);
     }
 
-    //Chamado pelo sistemaController quando a regressão for calculada
+    // Chamado pelo SistemaController quando a regressão for calculada
     public void atualizarResultados(double beta0, double beta1, double r2, int n) {
-        lblBeta0.setText(String.format("β₀: %.4f", beta0));
-        lblBeta1.setText(String.format("β₁: %.4f", beta1));
-        lblR2.setText(String.format("R²: %.4f", r2));
-        lblN.setText(String.format("N: %d", n));
+
+        lblBeta0.setText("β₀: " + FormatarNumero.decimal(beta0));
+
+        lblBeta1.setText("β₁: " + FormatarNumero.decimal(beta1));
+
+        lblR2.setText("R²: " + FormatarNumero.decimal(r2));
+
+        lblN.setText("N: " + n);
     }
 
     public void limparResultados() {

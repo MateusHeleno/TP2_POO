@@ -3,10 +3,11 @@ package DAO;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.time.format.DateTimeParseException;
+
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import model.ErroValidacao;
 import model.Medicao;
@@ -30,35 +31,37 @@ public class MedicaoDAO {
     }
     
     public List<Medicao> carregarDeTSV(File arquivo) throws IOException {
-        List<Medicao> medicacoes = new ArrayList<>();
+        List<Medicao> medicoes = new ArrayList<>();
         erros.resetar();
         
         try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
             String linha;
-            boolean primeiraLinha = true;
+            int numeroLinha = 1;
             
             while ((linha = reader.readLine()) != null) {
-                if (primeiraLinha) {   
-                    erros.registrarLinhaProcessada();
-                    primeiraLinha = false;
+                if (numeroLinha == 1) {   
+                    numeroLinha++;
                     continue; // pula cabeçalho
                 }
+                erros.registrarLinhaProcessada();
                 
-                Medicao m = parseLinha(linha);
+                Medicao m = parseLinha(linha,numeroLinha);
                 if (m != null) {
-                    medicacoes.add(m);
+                    medicoes.add(m);
                     erros.registrarLinhaValida();
                 }
+
+                numeroLinha++;
             }
         }
         
-        return medicacoes;
+        return medicoes;
     }
     
-    private Medicao parseLinha(String linha) {
+    private Medicao parseLinha(String linha, int numeroLinha) {
         String[] campos = linha.split("\t");
         if (campos.length < 6) {
-            erros.registrarErroFormato(erros.getLinhasProcessadas(), "Incompleto");
+            erros.registrarErroFormato(numeroLinha, "Incompleto");
             return null;
         }
         
@@ -72,37 +75,43 @@ public class MedicaoDAO {
             
             // Validações
             if (!validarCoordenada(latitude, longitude)) {
-                erros.registrarErroCoordenada(erros.getLinhasProcessadas(), "Coordenadas inválidas");
+                erros.registrarErroCoordenada(numeroLinha, "Coordenadas inválidas");
                 return null;
             }
             
             if (!validarTemperatura(temperatura)) {
-                erros.registrarErroTemperatura(erros.getLinhasProcessadas(), "Temperaturas inválidas");
+                erros.registrarErroTemperatura(numeroLinha, "Temperaturas inválidas");
                 return null;
             }
             
             if (!validarConsumo(consumoKwh)) {
-                erros.registrarErroConsumo(erros.getLinhasProcessadas(), "Consumo inválido");
+                erros.registrarErroConsumo(numeroLinha, "Consumo inválido");
                 return null;
             }
             
             return new Medicao(timestamp, cidade, latitude, longitude, temperatura, consumoKwh);
             
-        } catch (Exception e) {
-            erros.registrarErroFormato(erros.getLinhasProcessadas(), "Erro de formato");
+        } catch (NumberFormatException e) {
+            erros.registrarErroFormato(numeroLinha,"Número inválido: " + e.getMessage());
+            return null;
+        }catch (DateTimeParseException e) {
+            erros.registrarErroFormato(numeroLinha,"Data inválida: " + e.getMessage());
+            return null;
+        }catch (Exception e) {
+            erros.registrarErroFormato(numeroLinha, "Erro inesperado: " + e.getClass().getSimpleName());
             return null;
         }
     }
     
-    public boolean validarCoordenada(double lat, double lon) {
+    private boolean validarCoordenada(double lat, double lon) {
         return lat >= LAT_MIN && lat <= LAT_MAX && lon >= LON_MIN && lon <= LON_MAX;
     }
     
-    public boolean validarTemperatura(double temp) {
+    private boolean validarTemperatura(double temp) {
         return temp >= TEMP_MIN && temp <= TEMP_MAX;
     }
     
-    public boolean validarConsumo(double consumo) {
+    private boolean validarConsumo(double consumo) {
         return consumo >= 0;
     }
     
@@ -111,12 +120,7 @@ public class MedicaoDAO {
     }
 
     public static LocalDateTime parseTimestamp(String str) {
-        try {
-            return LocalDateTime.parse(str);
-        } catch (Exception e) {
-            // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.US);
-            return LocalDateTime.parse(str, FORMATTER);
-        }
+        return LocalDateTime.parse(str, FORMATTER);
     }
 
 }

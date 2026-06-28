@@ -46,7 +46,7 @@ public class MainFrame extends JFrame {
     private void inicializarComponentes() {
         tabbedPane = new JTabbedPane();
 
-        medicoesPanel = new MedicoesPanel(null);
+        medicoesPanel = new MedicoesPanel();
         filtrosPanel = new FiltrosPanel();
         regressaoPanel = new RegressaoPanel();
         graficoPanel = new GraficoPanel();
@@ -100,7 +100,7 @@ public class MainFrame extends JFrame {
         }
 
         progressBarR2.setValue(valor);
-        progressBarR2.setString(String.format("R² = %.4f", r2));
+        progressBarR2.setString("R² = " + FormatarNumero.decimal(r2));
 
         if (r2 < 0.3) {
             progressBarR2.setForeground(Color.RED);

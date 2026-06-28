@@ -121,11 +121,12 @@ public class GraficoPanel extends JPanel {
         g2.rotate(Math.PI / 2);
 
         g2.setFont(new Font("Arial", Font.PLAIN, 10));
-        g2.drawString(String.format("%.1f", minTemp), xInicio, yFim + 15);
-        g2.drawString(String.format("%.1f", maxTemp), xFim - 30, yFim + 15);
+        g2.drawString(FormatarNumero.umaCasaDecimal(minTemp),xInicio,yFim + 15);
+        g2.drawString(FormatarNumero.umaCasaDecimal(maxTemp),xFim - 30,yFim + 15);
 
-        g2.drawString(String.format("%.1f", minConsumo), xInicio - 45, yFim);
-        g2.drawString(String.format("%.1f", maxConsumo), xInicio - 45, yInicio + 5);
+        g2.drawString(FormatarNumero.umaCasaDecimal(minConsumo),xInicio - 45,yFim);
+        g2.drawString(FormatarNumero.umaCasaDecimal(maxConsumo),xInicio - 45,yInicio + 5);
+
     }
 
     private void desenharPontos(Graphics2D g2) {
@@ -168,7 +169,7 @@ public class GraficoPanel extends JPanel {
                 regressao.getBeta0()
         );
 
-        String r2 = String.format("R² = %.4f", regressao.getR2());
+        String r2 = "R² = " + FormatarNumero.decimal(regressao.getR2());
 
         g2.drawString(eq, MARGEM_ESQUERDA + 10, MARGEM_TOPO + 20);
         g2.drawString(r2, MARGEM_ESQUERDA + 10, MARGEM_TOPO + 40);

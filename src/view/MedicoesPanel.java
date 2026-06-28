@@ -12,6 +12,10 @@ public class MedicoesPanel extends JPanel {
     private JButton btnRemover;
     private JScrollPane scrollPane;
 
+    public MedicoesPanel() {
+        this(new TabelaModel());
+    }
+
     public MedicoesPanel(TabelaModel model) {
         this.tableModel = model != null ? model : new TabelaModel();
         inicializarComponentes();

@@ -1,13 +1,15 @@
 1 - Analisar repetição de código
-2 - Implementar a classe FormatarNumero nos códigos(opicional)
 3 - FiltrosPanel — filtros sem conexão com o controller
 4 - SistemaController — o Filtro nunca é populado
+
+2 - Implementar a classe FormatarNumero nos códigos(opicional) --> corrigido, mas deixei dois string.format 
+mais especificos
 5 - RegressaoLinear — consumoPrevisto nunca é gravado na Medicao -> corrigido
-6 - MedicaoDAO.parseLinha() — contagem de linhas errada
-7 - MedicaoDAO.carregarDeTSV() — não registra o número da linha atual no parseLinha
+6 - MedicaoDAO.parseLinha() — contagem de linhas errada --> corrigido
+7 - MedicaoDAO.carregarDeTSV() — não registra o número da linha atual no parseLinha --> corrigido
 8 - adicionarMedicao() — cria Medicao com todos os campos nulos/zero -> corrigido
 9 - TSVFileManager — classe inutilizada -> corrigido
-10 - MainFrame.inicializarComponentes() — MedicoesPanel criado com null
+10 - MainFrame.inicializarComponentes() — MedicoesPanel criado com null --> corrigido
 11 - MedicaoDAO — parseTimestamp() nunca é chamado -> corrigido
 12 - ErroValidacao.getMensagemResumo() — bug de concatenação -> corrigido
 13 - Filtro.aplicarFiltroRaio() — NPE potencial quando raioKm é null -> corrigido

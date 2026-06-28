@@ -30,21 +30,26 @@ public class OutlierTableCellRenderer
     }
 
     private void formatarValor(double valor, int coluna) {
+
         switch (coluna) {
+
             case COLUNA_TEMPERATURA:
-                setText(String.format("%.2f °C", valor));
+                setText(FormatarNumero.temperatura(valor));
                 break;
+
             case COLUNA_CONSUMO:
             case COLUNA_CONSUMO_PREVISTO:
-                setText(String.format("%.2f", valor));
+                setText(FormatarNumero.consumo(valor));
                 break;
+
             case COLUNA_RESIDUO:
-                setText(String.format("%.2f%%", valor));
+                setText(FormatarNumero.percentual(valor));
                 break;
+
             default:
                 break;
         }
-    }
+}
 
     @Override
     public Component getTableCellRendererComponent(

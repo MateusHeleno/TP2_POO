@@ -33,30 +33,25 @@ public class ErroValidacao {
     }
 
     public void registrarLinhaValida() {
-        registrarLinhaProcessada();
         this.linhasValidas++;
     }
 
     public void registrarErroCoordenada(int numeroLinha, String detalhe) {
-        registrarLinhaProcessada();
         this.errosCoordenada++;
         this.mensagensErro.add("Linha " + numeroLinha + " [Coordenada]: " + detalhe);
     }
 
     public void registrarErroTemperatura(int numeroLinha, String detalhe) {
-        registrarLinhaProcessada();
         this.errosTemperatura++;
         this.mensagensErro.add("Linha " + numeroLinha + " [Temperatura]: " + detalhe);
     }
 
     public void registrarErroConsumo(int numeroLinha, String detalhe) {
-        registrarLinhaProcessada();
         this.errosConsumo++;
         this.mensagensErro.add("Linha " + numeroLinha + " [Consumo]: " + detalhe);
     }
 
     public void registrarErroFormato(int numeroLinha, String detalhe) {
-        registrarLinhaProcessada();
         this.errosFormato++;
         this.mensagensErro.add("Linha " + numeroLinha + " [Formato]: " + detalhe);
     }
@@ -105,5 +100,9 @@ public class ErroValidacao {
         }
 
         return sb.toString();
+    }
+
+    public List<String> getMensagensErro() {
+        return Collections.unmodifiableList(mensagensErro);
     }
 }
